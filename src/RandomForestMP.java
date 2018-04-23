@@ -29,6 +29,7 @@ public final class RandomForestMP {
 
         SparkConf sparkConf = new SparkConf().setAppName("RandomForestMP");
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
+	final RandomForestModel model;
 
         Integer numClasses = 2;
         HashMap<Integer, Integer> categoricalFeaturesInfo = new HashMap<Integer, Integer>();
