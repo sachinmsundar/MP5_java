@@ -30,7 +30,6 @@ public final class KMeansMP {
         int iterations = 100;
         int runs = 1;
         long seed = 0;
-		final KMeansModel model;
 		
         SparkConf sparkConf = new SparkConf().setAppName("KMeans MP");
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
