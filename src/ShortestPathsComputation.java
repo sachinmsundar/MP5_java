@@ -31,5 +31,6 @@ public class ShortestPathsComputation extends BasicComputation<
   public void compute(
       Vertex<IntWritable, IntWritable, NullWritable> vertex,
       Iterable<IntWritable> messages) throws IOException {
+      //TODO
   }
 }
