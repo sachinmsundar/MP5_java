@@ -55,14 +55,11 @@ public class ConnectedComponentsComputation extends
 
       else {
           for (IntWritable msg : messages){
-              int newComp = msg.get();
-              if(newComp < current){
-                  sendMsg = true;
-              }
+              current = Math.min(current, msg.get());
           }
 
           // send messages
-          if (sendMsg){
+          if (current != vertex.getValue().get()){
               vertex.setValue(new IntWritable(current));
               sendMessageToAllEdges(vertex, vertex.getValue());
           }
