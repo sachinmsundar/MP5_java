@@ -32,5 +32,25 @@ public class ShortestPathsComputation extends BasicComputation<
       Vertex<IntWritable, IntWritable, NullWritable> vertex,
       Iterable<IntWritable> messages) throws IOException {
       //TODO
+
+      if (getSuperstep() == 0) {
+          vertex.setValue(new IntWritable(Integer.MAX_VALUE));
+      }
+
+      Integer dist = isSource(vertex) ? 0 : Integer.MAX_VALUE;
+      for (IntWritable message : messages) {
+          dist = Math.min(dist, message.get());
+      }
+
+      if (dist < vertex.getValue().get()) {
+          vertex.setValue(new IntWritable(dist));
+
+          for (Edge<IntWritable, NullWritable> edge : vertex.getEdges()) {
+              Integer distance = dist + 1;
+              sendMessage(edge.getTargetVertexId(), new IntWritable(distance));
+          }
+      }
+
+      vertex.voteToHalt();
   }
 }

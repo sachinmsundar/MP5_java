@@ -26,5 +26,48 @@ public class ConnectedComponentsComputation extends
       Vertex<IntWritable, IntWritable, NullWritable> vertex,
       Iterable<IntWritable> messages) throws IOException {
       //TODO
+
+      int current = vertex.getValue().get();
+      boolean sendMsg = false;
+
+      if (getSuperstep() == 0){
+
+          // Get value from neighbors
+          for (Edge<IntWritable, NullWritable> edge : vertex.getEdges()){
+              int neighbor = edge.getTargetVertexId().get();
+              if(neighbor < current){
+                  current = neighbor;
+              }
+          }
+
+          // broadcast if the ID is different
+          if (current != vertex.getValue().get()){
+              vertex.setValue(new IntWritable(current));
+
+              for (Edge<IntWritable, NullWritable> edge : vertex.getEdges()){
+                  IntWritable neighbor = edge.getTargetVertexId();
+                  if (neighbor.get() > current){
+                      sendMessage(neighbor, vertex.getValue());
+                  }
+              }
+          }
+      }
+
+      else {
+          for (IntWritable msg : messages){
+              int newComp = msg.get();
+              if(newComp < current){
+                  sendMsg = true;
+              }
+          }
+
+          // send messages
+          if (sendMsg){
+              vertex.setValue(new IntWritable(current));
+              sendMessageToAllEdges(vertex, vertex.getValue());
+          }
+      }
+
+      vertex.voteToHalt();
   }
 }
